@@ -38,6 +38,22 @@ labels_test_for_decision_tree = labels_test.replace({1:"satisfied", 0:"neutral o
 # Creates the decision tree model
 decision_tree_classifier = DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.01, max_depth=5)
 
+# Trains the model
+decision_tree_classifier.fit(features_train, labels_train_for_decision_tree)
+
+# Predicts data using decision tree
+predicted_labels_of_decision_tree = decision_tree_classifier.predict(features_test)
+#predicted_labels_of_decision_tree = predicted_labels_of_decision_tree.replace({})
+
+# Evaluates performance of decision tree
+accuracy_of_decision_tree = accuracy_score(labels_test_for_decision_tree, predicted_labels_of_decision_tree)
+# precision_score_of_decision_tree = precision_score(labels_test_for_decision_tree, predicted_labels_of_decision_tree)
+# recall_score_of_decision_tree = recall_score(labels_test_for_decision_tree, predicted_labels_of_decision_tree)
+# f1_score_of_decision_tree = f1_score(labels_test_for_decision_tree, predicted_labels_of_decision_tree)
+print(accuracy_of_decision_tree)
+# print(precision_score_of_decision_tree)
+# print(recall_score_of_decision_tree)
+# print(f1_score_of_decision_tree)
 
 
 

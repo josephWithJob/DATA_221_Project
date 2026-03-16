@@ -30,6 +30,15 @@ features_train, features_test, labels_train, labels_test = train_test_split(feat
                                                                             satisfaction_airline_data_csv, test_size=0.33, random_state=42)
 
 
+# ========================= DECISION TREE =========================
+# Changes data into classification
+labels_train_for_decision_tree = labels_train.replace({1:"satisfied", 0:"neutral or dissatisfied"})
+labels_test_for_decision_tree = labels_test.replace({1:"satisfied", 0:"neutral or dissatisfied"})
+
+# Creates the decision tree model
+decision_tree_classifier = DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.01, max_depth=5)
+
+
 
 
 

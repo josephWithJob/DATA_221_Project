@@ -24,20 +24,21 @@ feature_data_from_airline_data_csv = airline_data_csv.drop('satisfaction', axis=
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.drop('id', axis=1)
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.iloc[:, 1:]
 
-# Turns classification data into 0's and 1's
+# Turns classification data into 0's and 1's for labels vector
 satisfaction_airline_data_csv = satisfaction_airline_data_csv.replace({
     "satisfied":1, "neutral or dissatisfied":0})
 
 # Correct dtype by converting values in labels vector to integers
 satisfaction_airline_data_csv = satisfaction_airline_data_csv.astype(int)
 
+# Turns classification data into 0's and 1's for feature matrix
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.replace({
     "Male":0, "Female":1,
     "disloyal Customer":0, "Loyal Customer":1,
     "Personal Travel":0, "Business travel":1,
     "Eco":0, "Eco Plus":0.5, "Business":1})
 
-# Splits data for training ML models
+# Splits data for training ML models using an 80/20 training/testing split
 features_train, features_test, labels_train, labels_test = train_test_split(
     feature_data_from_airline_data_csv,
     satisfaction_airline_data_csv,
@@ -46,17 +47,22 @@ features_train, features_test, labels_train, labels_test = train_test_split(
 
 # ========================= KNN MODEL =========================
 
-knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=3)
+# Define a KNN model that searches the 5 closest neighbours
+knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=5)
 
+# Train the KNN model using the training data
 trained_knn_model_of_customer_satisfaction = knn_model_of_customer_satisfaction.fit(features_train, labels_train)
 
+# Make predictions using the testing data
 predictions_of_knn_model = trained_knn_model_of_customer_satisfaction.predict(features_test)
 
+# Calculate evaluation metrics
 accuracy_of_knn_model = accuracy_score(labels_test, predictions_of_knn_model)
 precision_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
 recall_of_knn_model = recall_score(labels_test, predictions_of_knn_model)
 f1_score_of_knn_model = f1_score(labels_test, predictions_of_knn_model)
 
+# Print the evaluation metrics
 print("Accuracy of the KNN model: ", accuracy_of_knn_model)
 print("Precision of the KNN model: ", precision_of_knn_model)
 print("Recall of the KNN model: ", recall_of_knn_model)

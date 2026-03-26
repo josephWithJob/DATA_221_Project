@@ -35,5 +35,14 @@ feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.replace(
 features_train, features_test, labels_train, labels_test = train_test_split(
     feature_data_from_airline_data_csv,
     satisfaction_airline_data_csv,
-    test_size=0.33,
+    test_size=0.20,
     random_state=42)
+
+# ========================= KNN MODEL =========================
+
+knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=5)
+
+trained_knn_model_of_customer_satisfaction = knn_model_of_customer_satisfaction.fit(features_train, labels_train)
+
+predictions_of_knn_model = trained_knn_model_of_customer_satisfaction.predict(features_test)
+

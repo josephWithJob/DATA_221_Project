@@ -28,6 +28,9 @@ feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.iloc[:, 
 satisfaction_airline_data_csv = satisfaction_airline_data_csv.replace({
     "satisfied":1, "neutral or dissatisfied":0})
 
+# Correct dtype by converting values in labels vector to integers
+satisfaction_airline_data_csv = satisfaction_airline_data_csv.astype(int)
+
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.replace({
     "Male":0, "Female":1,
     "disloyal Customer":0, "Loyal Customer":1,
@@ -43,7 +46,7 @@ features_train, features_test, labels_train, labels_test = train_test_split(
 
 # ========================= KNN MODEL =========================
 
-knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=5)
+knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=3)
 
 trained_knn_model_of_customer_satisfaction = knn_model_of_customer_satisfaction.fit(features_train, labels_train)
 
@@ -51,7 +54,7 @@ predictions_of_knn_model = trained_knn_model_of_customer_satisfaction.predict(fe
 
 accuracy_of_knn_model = accuracy_score(labels_test, predictions_of_knn_model)
 precision_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
-recall_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
+recall_of_knn_model = recall_score(labels_test, predictions_of_knn_model)
 f1_score_of_knn_model = f1_score(labels_test, predictions_of_knn_model)
 
 print("Accuracy of the KNN model: ", accuracy_of_knn_model)

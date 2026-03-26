@@ -13,6 +13,9 @@ from sklearn.neighbors import KNeighborsClassifier
 # Reads the csv
 airline_data_csv = pandas.read_csv("AirlineData.csv")
 
+# Drop any rows containing missing values
+airline_data_csv = airline_data_csv.dropna()
+
 # Separates the data for the target data
 satisfaction_airline_data_csv = airline_data_csv['satisfaction']
 

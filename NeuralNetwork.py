@@ -22,6 +22,8 @@ airline_data_csv = airline_data_csv.replace({
     "Personal Travel":0, "Business travel":1,
     "Eco":0, "Eco Plus":1, "Business":2,
     "satisfied":1, "neutral or dissatisfied":0})
+airline_data_csv = airline_data_csv.astype(float)
+
 
 # Separates the data for the target data
 satisfaction_airline_data_csv = airline_data_csv['satisfaction']
@@ -38,3 +40,17 @@ features_train, features_test, labels_train, labels_test = train_test_split(
     satisfaction_airline_data_csv,
     test_size=0.2,
     random_state=42)
+
+model = models.Sequential([ #create neural network
+    layers.Input(shape = (22,)),
+    layers.Dense(12,activation = "relu"),
+    layers.Dense(6, activation = "relu"),
+    layers.Dense(1, activation="sigmoid")
+])
+
+model.compile(optimizer = "adam", loss = "binary_crossentropy",metrics = ["accuracy"])
+model.fit(features_train,labels_train,validation_split =0.1,epochs = 10 ,batch_size = 32) #fit/train model
+test_predicted_labels = (model.predict(features_test) > 0.5).astype(int).flatten() #find the labels for all the predictions
+
+print(accuracy_score(test_predicted_labels,labels_test))
+

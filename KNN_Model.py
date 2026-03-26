@@ -46,3 +46,12 @@ trained_knn_model_of_customer_satisfaction = knn_model_of_customer_satisfaction.
 
 predictions_of_knn_model = trained_knn_model_of_customer_satisfaction.predict(features_test)
 
+accuracy_of_knn_model = accuracy_score(labels_test, predictions_of_knn_model)
+precision_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
+recall_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
+f1_score_of_knn_model = f1_score(labels_test, predictions_of_knn_model)
+
+print("Accuracy of the KNN model: ", accuracy_of_knn_model)
+print("Precision of the KNN model: ", precision_of_knn_model)
+print("Recall of the KNN model: ", recall_of_knn_model)
+print("F1 of the KNN model: ", f1_score_of_knn_model)

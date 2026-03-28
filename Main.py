@@ -27,7 +27,7 @@ feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.replace(
 
 # Splits data for training ML models
 features_train, features_test, labels_train, labels_test = train_test_split(feature_data_from_airline_data_csv,
-                                                                            satisfaction_airline_data_csv, test_size=0.33, random_state=42)
+                                                                            satisfaction_airline_data_csv, test_size=0.2, random_state=42)
 
 
 # ========================= DECISION TREE =========================
@@ -57,4 +57,10 @@ print(accuracy_of_decision_tree)
 
 
 
+# Plotting the model
+import matplotlib.pyplot as plt
+from sklearn.tree import plot_tree
+plt.figure(figsize=(15, 10))
+plot_tree(decision_tree_classifier, filled=True) # {Link: See example usage here https://stackoverflow.com/questions/27817994/visualizing-decision-tree-in-scikit-learn}
+plt.show()
 

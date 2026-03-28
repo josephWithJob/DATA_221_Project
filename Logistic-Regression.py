@@ -6,6 +6,7 @@
 import pandas
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 # Reads the csv
 airline_data_csv = pandas.read_csv("AirlineData.csv")
@@ -39,9 +40,22 @@ satisfaction_airline_data_csv = satisfaction_airline_data_csv[feature_data_from_
 features_train, features_test, labels_train, labels_test = train_test_split(feature_data_from_airline_data_csv,
                                                                             satisfaction_airline_data_csv, test_size=0.20, random_state=42)
 
+#================================== Model ========================================
+'''
+Since our data set has drastic values such as flight distance our model has to work
+with a lot of big and different values. We can scale our data so our model has an easier time
+gathering up the data and comparing.
+'''
+# create a scaler
+scaler = StandardScaler()
 
-classifier = LogisticRegression(max_iter=1000)
-classifier.fit(features_train, labels_train)
+# fit the scaler on training data and transform both sets
+features_train_scaled = scaler.fit_transform(features_train)
+features_test_scaled = scaler.transform(features_test)
 
-accuracy_score = classifier.score(features_test, labels_test)
-print(f"Model Accuracy: {accuracy_score}")
+# train the model on the SCALED data using our scaler import
+classifier = LogisticRegression(max_iter=100)
+classifier.fit(features_train_scaled, labels_train)
+
+accuracy_score = classifier.score(features_test_scaled, labels_test)
+print(f"Logistic Regression Model Accuracy: {accuracy_score:.2f}")

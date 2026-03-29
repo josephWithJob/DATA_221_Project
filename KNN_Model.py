@@ -50,6 +50,13 @@ features_train, features_test, labels_train, labels_test = train_test_split(
 # Define a list of 8 different number of neighbours to use to define our KNN Model
 list_of_number_of_neighbors = [1,3,5,7,9,11,13, 15]
 
+# Define a dictionary to later be used to create a table of evaluation metrics:
+dictionary_of_knn_evaluation_metrics = {"K-Nearest Neighbors": list_of_number_of_neighbors,
+                                        "F1-Score": [],
+                                        "Accuracy": [],
+                                        "Precision": [],
+                                        "Recall": []}
+
 # Initialize evaluation metrics variables with the number of neighbours that produce the highest f1-score
 highest_f1_score_of_knn_model = 0.0
 accuracy_at_highest_f1_score = 0.0
@@ -74,6 +81,12 @@ for num_neighbors in list_of_number_of_neighbors:
     precision_of_knn_model = precision_score(labels_test, predictions_of_knn_model)
     recall_of_knn_model = recall_score(labels_test, predictions_of_knn_model)
 
+    # Append evaluation metrics to dictionary for table
+    dictionary_of_knn_evaluation_metrics["F1-Score"].append(f1_score_of_knn_model)
+    dictionary_of_knn_evaluation_metrics["Accuracy"].append(accuracy_of_knn_model)
+    dictionary_of_knn_evaluation_metrics["Precision"].append(precision_of_knn_model)
+    dictionary_of_knn_evaluation_metrics["Recall"].append(recall_of_knn_model)
+
     # Find the highest f1-score of all KNN Models and set their evaluation metric scores here
     if f1_score_of_knn_model > highest_f1_score_of_knn_model:
         highest_f1_score_of_knn_model = f1_score_of_knn_model
@@ -89,3 +102,9 @@ print("Highest F1-Score of the KNN model: ", highest_f1_score_of_knn_model)
 print("Accuracy at the Highest F1-Score: ", accuracy_at_highest_f1_score)
 print("Precision at the Highest F1-Score: ", precision_at_highest_f1_score)
 print("Recall at the Highest F1-Score: ", recall_at_highest_f1_score)
+
+# ========================= TABLES AND FIGURES =========================
+
+table_of_knn_evaluation_metrics = pandas.DataFrame(dictionary_of_knn_evaluation_metrics)
+print("\nTable of KNN Model's Evaluation Metrics:\n", table_of_knn_evaluation_metrics)
+

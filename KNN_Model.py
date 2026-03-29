@@ -6,6 +6,7 @@
 
 # Library Imports
 import pandas
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.neighbors import KNeighborsClassifier
@@ -51,7 +52,7 @@ features_train, features_test, labels_train, labels_test = train_test_split(
 list_of_number_of_neighbors = [1,3,5,7,9,11,13, 15]
 
 # Define a dictionary to later be used to create a table of evaluation metrics:
-dictionary_of_knn_evaluation_metrics = {"K-Nearest Neighbors": list_of_number_of_neighbors,
+dictionary_of_knn_evaluation_metrics = {"K-Nearest Neighbours": list_of_number_of_neighbors,
                                         "F1-Score": [],
                                         "Accuracy": [],
                                         "Precision": [],
@@ -108,3 +109,18 @@ print("Recall at the Highest F1-Score: ", recall_at_highest_f1_score)
 table_of_knn_evaluation_metrics = pandas.DataFrame(dictionary_of_knn_evaluation_metrics)
 print("\nTable of KNN Model's Evaluation Metrics:\n", table_of_knn_evaluation_metrics)
 
+
+
+plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["F1-Score"], label="F1 Score")
+plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Accuracy"], label="Accuracy")
+plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Precision"], label="Precision")
+plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Recall"], label="Recall")
+
+plt.xlabel("Number of Neighbours (k)")
+plt.ylabel("Score")
+plt.title("KNN Performance Metrics vs k")
+
+plt.legend()
+plt.grid()
+
+plt.show()

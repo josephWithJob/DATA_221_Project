@@ -59,15 +59,11 @@ dictionary_of_knn_evaluation_metrics = {"K-Nearest Neighbours": list_of_number_o
                                         "Precision": [],
                                         "Recall": []}
 
-# Initialize evaluation metrics variables with the number of neighbours that produce the highest f1-score
+# Initialize variable that will hold the highest f1-score and the labels predictions used to calculate it
 highest_f1_score_of_knn_model = 0.0
-
-labels_test_of_highest_f1_score = 0
 predictions_of_highest_f1_score = 0
 
-
-
-
+# For every k-value in the list_of_number_of_neighbors, predict labels using a KNN Model
 for num_neighbors in list_of_number_of_neighbors:
     # Define a KNN model that searches the selected number of closest neighbours
     knn_model_of_customer_satisfaction = KNeighborsClassifier(n_neighbors=num_neighbors)
@@ -90,9 +86,9 @@ for num_neighbors in list_of_number_of_neighbors:
     dictionary_of_knn_evaluation_metrics["Precision"].append(precision_of_knn_model)
     dictionary_of_knn_evaluation_metrics["Recall"].append(recall_of_knn_model)
 
-    # Find the highest f1-score of all KNN Models and store the labels_test and label predictions used to find it
+    # Find the highest f1-score of all KNN Models and store the label predictions used to find it
     if f1_score_of_knn_model > highest_f1_score_of_knn_model:
-        labels_test_of_highest_f1_score = labels_test
+        highest_f1_score_of_knn_model = f1_score_of_knn_model
         predictions_of_highest_f1_score = predictions_of_knn_model
 
 
@@ -135,7 +131,7 @@ plt.show()
 # CONFUSION MATRIX OF THE BEST KNN MODEL
 
 # Create a confusion matrix using the labels_test and label predictions of the model that produces the highest f1-score
-ConfusionMatrixDisplay.from_predictions(labels_test_of_highest_f1_score, predictions_of_highest_f1_score)
+ConfusionMatrixDisplay.from_predictions(labels_test, predictions_of_highest_f1_score)
 
 # Set the title of the confusion matrix and show it
 plt.title("Confusion Matrix of Best KNN Model")

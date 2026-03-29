@@ -59,7 +59,7 @@ model.fit(features_train,labels_train,validation_split =0.1,epochs = 15 ,batch_s
 #predicts labels based on the model.
 test_predicted_labels = (model.predict(features_test) > 0.5).astype(int).flatten() #find the labels for all the predictions
 
-print("Accuracy: ", accuracy_score(test_predicted_labels,labels_test))
-print("Precision: ", precision_score(test_predicted_labels,labels_test))
-print("Recall: ", recall_score(test_predicted_labels,labels_test))
-print("F1 Score: ", f1_score(test_predicted_labels, labels_test))
+print("Accuracy: ", accuracy_score(labels_test,test_predicted_labels))
+print("Precision: ", precision_score(labels_test,test_predicted_labels))
+print("Recall: ", recall_score(labels_test,test_predicted_labels))
+print("F1 Score: ", f1_score(labels_test,test_predicted_labels))

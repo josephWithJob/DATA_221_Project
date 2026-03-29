@@ -106,21 +106,32 @@ print("Recall at the Highest F1-Score: ", recall_at_highest_f1_score)
 
 # ========================= TABLES AND FIGURES =========================
 
+# Create and print a table of KNN Evaluation Metrics
 table_of_knn_evaluation_metrics = pandas.DataFrame(dictionary_of_knn_evaluation_metrics)
 print("\nTable of KNN Model's Evaluation Metrics:\n", table_of_knn_evaluation_metrics)
 
-
-
+# Create a line graph by plotting each evaluation metric at each k-value
 plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["F1-Score"], label="F1 Score")
 plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Accuracy"], label="Accuracy")
 plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Precision"], label="Precision")
 plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["Recall"], label="Recall")
 
+# Add labels and title to graph
 plt.xlabel("Number of Neighbours (k)")
 plt.ylabel("Score")
-plt.title("KNN Performance Metrics vs k")
+plt.title("KNN Performance Metrics vs Number of Neighbours")
 
+# Calculate the row with the highest f1-score
+best_row = table_of_knn_evaluation_metrics.loc[table_of_knn_evaluation_metrics["F1-Score"].idxmax()]
+
+# Store the best k-value and best f1-score here
+best_k = best_row["K-Nearest Neighbours"]
+best_f1 = best_row["F1-Score"]
+
+# Plot the vertical line showing the k-value with the best f1-score
+plt.axvline(x=best_k, linestyle="--", label="Best k")
+
+# Plot the legend, a grid layout, and show the graph
 plt.legend()
 plt.grid()
-
 plt.show()

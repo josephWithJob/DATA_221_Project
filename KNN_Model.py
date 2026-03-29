@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import ConfusionMatrixDisplay
 
 # Reads the csv
 airline_data_csv = pandas.read_csv("AirlineData.csv")
@@ -60,11 +61,12 @@ dictionary_of_knn_evaluation_metrics = {"K-Nearest Neighbours": list_of_number_o
 
 # Initialize evaluation metrics variables with the number of neighbours that produce the highest f1-score
 highest_f1_score_of_knn_model = 0.0
-accuracy_at_highest_f1_score = 0.0
-precision_at_highest_f1_score = 0.0
-recall_at_highest_f1_score = 0.0
 
-number_of_neighbors_at_highest_f1_score = 0
+labels_test_of_highest_f1_score = 0
+predictions_of_highest_f1_score = 0
+
+
+
 
 for num_neighbors in list_of_number_of_neighbors:
     # Define a KNN model that searches the selected number of closest neighbours
@@ -88,27 +90,21 @@ for num_neighbors in list_of_number_of_neighbors:
     dictionary_of_knn_evaluation_metrics["Precision"].append(precision_of_knn_model)
     dictionary_of_knn_evaluation_metrics["Recall"].append(recall_of_knn_model)
 
-    # Find the highest f1-score of all KNN Models and set their evaluation metric scores here
+    # Find the highest f1-score of all KNN Models and store the labels_test and label predictions used to find it
     if f1_score_of_knn_model > highest_f1_score_of_knn_model:
-        highest_f1_score_of_knn_model = f1_score_of_knn_model
-        accuracy_at_highest_f1_score = accuracy_of_knn_model
-        precision_at_highest_f1_score = precision_of_knn_model
-        recall_at_highest_f1_score = recall_of_knn_model
+        labels_test_of_highest_f1_score = labels_test
+        predictions_of_highest_f1_score = predictions_of_knn_model
 
-        number_of_neighbors_at_highest_f1_score = num_neighbors
-
-# Print the evaluation metrics
-print("Number of K-Nearest-Neighbors that Produce Highest F1-Score:", number_of_neighbors_at_highest_f1_score)
-print("Highest F1-Score of the KNN model: ", highest_f1_score_of_knn_model)
-print("Accuracy at the Highest F1-Score: ", accuracy_at_highest_f1_score)
-print("Precision at the Highest F1-Score: ", precision_at_highest_f1_score)
-print("Recall at the Highest F1-Score: ", recall_at_highest_f1_score)
 
 # ========================= TABLES AND FIGURES =========================
+
+# TABLE OF EACH KNN MODEL'S PERFORMANCE METRICS
 
 # Create and print a table of KNN Evaluation Metrics
 table_of_knn_evaluation_metrics = pandas.DataFrame(dictionary_of_knn_evaluation_metrics)
 print("\nTable of KNN Model's Evaluation Metrics:\n", table_of_knn_evaluation_metrics)
+
+# LINE GRAPH OF EACH KNN MODEL's PERFORMANCE METRICS
 
 # Create a line graph by plotting each evaluation metric at each k-value
 plt.plot(table_of_knn_evaluation_metrics["K-Nearest Neighbours"], table_of_knn_evaluation_metrics["F1-Score"], label="F1 Score")
@@ -134,4 +130,13 @@ plt.axvline(x=best_k, linestyle="--", label="Best k")
 # Plot the legend, a grid layout, and show the graph
 plt.legend()
 plt.grid()
+plt.show()
+
+# CONFUSION MATRIX OF THE BEST KNN MODEL
+
+# Create a confusion matrix using the labels_test and label predictions of the model that produces the highest f1-score
+ConfusionMatrixDisplay.from_predictions(labels_test_of_highest_f1_score, predictions_of_highest_f1_score)
+
+# Set the title of the confusion matrix and show it
+plt.title("Confusion Matrix of Best KNN Model")
 plt.show()

@@ -5,7 +5,7 @@
 
 # Library Imports
 import matplotlib.pyplot as plt
-import pandas
+import pandas as pd
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, ConfusionMatrixDisplay, \
     confusion_matrix
 from sklearn.model_selection import train_test_split
@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras import layers, models
 
 # Reads the csv
-airline_data_csv = pandas.read_csv("AirlineData.csv")
+airline_data_csv = pd.read_csv("AirlineData.csv")
 
 # Removes all NA value rows.
 airline_data_csv = airline_data_csv.dropna()
@@ -108,3 +108,7 @@ display.plot()
 plt.title("Neural network confusion matrix")
 plt.show()
 
+
+data = {"epoch values": epoch_values, "accuracy": epoch_value_accuracy_score, "precision": epoch_value_precision_score, "recall": epoch_value_recall_score, "F1_score": epoch_value_f1_score}
+df = pd.DataFrame(data)
+print(df)

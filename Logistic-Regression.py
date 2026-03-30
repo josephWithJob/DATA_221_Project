@@ -8,6 +8,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+import matplotlib.pyplot as plt
+
 
 
 # Reads the csv
@@ -63,3 +65,24 @@ f1_score = f1_score(labels_test, classifier.predict(features_test_scaled))
 accuracy_score = classifier.score(features_test_scaled, labels_test)
 print(f"Logistic Regression Model Accuracy: {accuracy_score:.2f}")
 print(f"Logistic Regression Model f1_Score: {f1_score:.2f}")
+
+# classifier coefficient contains the weight for each feature
+importance_df = pd.DataFrame({
+    'Feature': feature_data_from_airline_data_csv.columns,
+    'Importance': classifier.coef_[0]
+})
+
+# sort them so the most important features are at the top
+importance_df = importance_df.sort_values(by='Importance', ascending=False)
+
+# plot the results
+plt.figure(figsize=(12, 8))
+colors = ['green' if x > 0 else 'red' for x in importance_df['Importance']]
+plt.barh(importance_df['Feature'], importance_df['Importance'], color=colors)
+plt.axvline(x=0, color='black', linestyle='-', linewidth=1) # Zero line for reference
+plt.xlabel("Importance")
+plt.title("What Drives Airline Satisfaction?")
+plt.gca().invert_yaxis() # highest importance at the top
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()

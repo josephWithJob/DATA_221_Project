@@ -67,7 +67,7 @@ print(f"Logistic Regression Model Accuracy: {accuracy_score:.2f}")
 print(f"Logistic Regression Model f1_Score: {f1_score:.2f}")
 
 # classifier coefficient contains the weight for each feature
-importance_df = pd.DataFrame({
+importance_df = pandas.DataFrame({
     'Feature': feature_data_from_airline_data_csv.columns,
     'Importance': classifier.coef_[0]
 })

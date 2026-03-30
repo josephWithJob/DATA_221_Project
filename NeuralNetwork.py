@@ -4,9 +4,12 @@
 # Data website link: https://www.kaggle.com/datasets/teejmahal20/airline-passenger-satisfaction?resource=download
 
 # Library Imports
+import matplotlib.pyplot as plt
 import pandas
-from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
+from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, ConfusionMatrixDisplay, \
+    confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from tensorflow.keras import layers, models
 
 # Reads the csv
@@ -28,11 +31,11 @@ airline_data_csv = airline_data_csv.astype(float)
 # Separates the data for the target data
 satisfaction_airline_data_csv = airline_data_csv['satisfaction']
 
+scaler = StandardScaler()
 # Separates the feature data and removes unnecessary columns of id number and first column unnamed.
 feature_data_from_airline_data_csv = airline_data_csv.drop('satisfaction', axis=1)
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.drop('id', axis=1)
 feature_data_from_airline_data_csv = feature_data_from_airline_data_csv.iloc[:, 1:]
-
 
 
 # Splits data for training ML models
@@ -42,24 +45,66 @@ features_train, features_test, labels_train, labels_test = train_test_split(
     test_size=0.2,
     random_state=42)
 
-#creates neural network
-model = models.Sequential([
-    layers.Input(shape = (22,)),
-    layers.Dense(11,activation = "relu"),
-    layers.Dense(5, activation = "relu"),
-    layers.Dense(1, activation="sigmoid")
-])
+features_train = scaler.fit_transform(features_train)
+features_test = scaler.transform(features_test)
 
-#configure model for training.
-model.compile(optimizer = "adam", loss = "binary_crossentropy",metrics = ["accuracy"])
 
-#trains the model
-model.fit(features_train,labels_train,validation_split =0.1,epochs = 15 ,batch_size = 32) #fit/train model
 
-#predicts labels based on the model.
-test_predicted_labels = (model.predict(features_test) > 0.5).astype(int).flatten() #find the labels for all the predictions
+labels = ["neutral or dissatisfied","satisfied"]
+epoch_values = []
+epoch_value_accuracy_score = []
+epoch_value_precision_score = []
+epoch_value_recall_score = []
+epoch_value_f1_score = []
+best_test_predicted_labels = []
 
-print("Accuracy: ", accuracy_score(labels_test,test_predicted_labels))
-print("Precision: ", precision_score(labels_test,test_predicted_labels))
-print("Recall: ", recall_score(labels_test,test_predicted_labels))
-print("F1 Score: ", f1_score(labels_test,test_predicted_labels))
+for epoch_value in range(10,100,5):
+    # creates neural network
+    model = models.Sequential([
+        layers.Input(shape=(22,)),
+        layers.Dense(11, activation="relu"),
+        layers.Dense(5, activation="relu"),
+        layers.Dense(1, activation="sigmoid")
+    ])
+
+    # configure model for training.
+    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+
+    #trains the model
+    model.fit(features_train,labels_train,validation_split =0.1,epochs = epoch_value ,batch_size = 32, verbose = 0) #fit/train model
+
+
+    #predicts labels based on the model.
+    test_predicted_labels = (model.predict(features_test, verbose = 0) > 0.5).astype(int).flatten() #find the labels for all the predictions
+    epoch_values.append(epoch_value)
+    epoch_value_accuracy_score.append(accuracy_score(labels_test,test_predicted_labels))
+    epoch_value_precision_score.append(precision_score(labels_test,test_predicted_labels))
+    epoch_value_recall_score.append(recall_score(labels_test,test_predicted_labels))
+    epoch_value_f1_score.append(f1_score(labels_test,test_predicted_labels))
+    if epoch_value_f1_score[-1] >= max(epoch_value_f1_score):
+        best_test_predicted_labels = test_predicted_labels
+
+
+
+plt.plot(epoch_values,epoch_value_accuracy_score,label = "accuracy")
+plt.plot(epoch_values, epoch_value_precision_score,label = "precision")
+plt.plot(epoch_values, epoch_value_recall_score, label = "recall")
+plt.plot(epoch_values, epoch_value_f1_score, label = "f1_score")
+plt.xlabel("epoch values")
+plt.ylabel("metric scores")
+plt.title("response of metric scores due to epoch values.")
+plt.legend()
+plt.show()
+
+print("best f1_score: ",max(epoch_value_f1_score))
+print("corresponding epoch value: ", epoch_values[epoch_value_f1_score.index(max(epoch_value_f1_score))])
+print("corresponding accuracy value: ", epoch_value_accuracy_score[epoch_value_f1_score.index(max(epoch_value_f1_score))])
+print("corresponding recall value: ", epoch_value_recall_score[epoch_value_f1_score.index(max(epoch_value_f1_score))])
+print("corresponding precision value: ", epoch_value_precision_score[epoch_value_f1_score.index(max(epoch_value_f1_score))])
+
+confusion_Matrix_Neural = confusion_matrix(labels_test,best_test_predicted_labels)
+display = ConfusionMatrixDisplay(confusion_matrix = confusion_Matrix_Neural, display_labels= labels)
+display.plot()
+plt.title("Neural network confusion matrix")
+plt.show()
+

@@ -62,11 +62,16 @@ features_test_scaled = scaler.transform(features_test)
 # train the model on the SCALED data using our scaler import
 classifier = LogisticRegression(max_iter=100)
 classifier.fit(features_train_scaled, labels_train)
-f1_score = f1_score(labels_test, classifier.predict(features_test_scaled))
 
-accuracy_score = classifier.score(features_test_scaled, labels_test)
+f1_score = f1_score(labels_test, classifier.predict(features_test_scaled))
+recall = recall_score(labels_test, classifier.predict(features_test_scaled))
+precision = precision_score(labels_test, classifier.predict(features_test_scaled))
+accuracy_score = accuracy_score(labels_test, classifier.predict(features_test_scaled))
+
 print(f"Logistic Regression Model Accuracy: {accuracy_score}")
 print(f"Logistic Regression Model f1_Score: {f1_score}")
+print(f"Logistic Regression Model Recall: {recall}")
+print(f"Logistic Regression Model Precision: {precision}")
 
 # classifier coefficient contains the weight for each feature
 importance_df = pandas.DataFrame({

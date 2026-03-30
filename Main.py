@@ -70,3 +70,19 @@ print("f1 Score:", f1_score_of_decision_tree)
 # plot_tree(decision_tree_classifier, filled=True)
 # plt.show()
 
+
+# Confusion matrix
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+confusion_matrix_of_classification = confusion_matrix(labels_test, predicted_labels_of_decision_tree)
+print(confusion_matrix_of_classification)
+
+# Create the display object
+disp = ConfusionMatrixDisplay(confusion_matrix=confusion_matrix_of_classification, display_labels=["0", "1"])
+
+# Plot the matrix
+disp.plot()
+
+# Add a title and show the plot
+plt.title("Confusion Matrix of Decision Tree")
+plt.show()

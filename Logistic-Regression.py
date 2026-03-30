@@ -9,6 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 
 
@@ -63,8 +65,8 @@ classifier.fit(features_train_scaled, labels_train)
 f1_score = f1_score(labels_test, classifier.predict(features_test_scaled))
 
 accuracy_score = classifier.score(features_test_scaled, labels_test)
-print(f"Logistic Regression Model Accuracy: {accuracy_score:.2f}")
-print(f"Logistic Regression Model f1_Score: {f1_score:.2f}")
+print(f"Logistic Regression Model Accuracy: {accuracy_score}")
+print(f"Logistic Regression Model f1_Score: {f1_score}")
 
 # classifier coefficient contains the weight for each feature
 importance_df = pandas.DataFrame({
@@ -85,4 +87,28 @@ plt.title("What Drives Airline Satisfaction?")
 plt.gca().invert_yaxis() # highest importance at the top
 plt.grid(axis='x', linestyle='--', alpha=0.7)
 plt.tight_layout()
+plt.show()
+
+# These are the numbers before they get "squashed" by the sigmoid
+raw_scores = classifier.decision_function(features_test_scaled)
+
+# 2. Create a smooth range for the X-axis based on your ACTUAL data limits
+x_range = np.linspace(raw_scores.min(), raw_scores.max(), 1000)
+
+# apply the Sigmoid math to that range
+# this makes the actual function
+y_sigmoid = 1 / (1 + np.exp(-x_range))
+
+# create the Plot
+plt.figure(figsize=(10, 6))
+
+# plot your model's specific Sigmoid Curve
+plt.plot(x_range, y_sigmoid, color='green', linewidth=3, label="Airline Data")
+
+# formatting
+plt.title("Sigmoid Curve: Airline Data", fontsize=14)
+plt.xlabel("Passenger Risk Score of all Features", fontsize=12)
+plt.ylabel("Probability of Satisfaction", fontsize=12)
+plt.grid(True, alpha=0.2)
+
 plt.show()

@@ -7,6 +7,8 @@ import pandas
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 
 # Reads the csv
 airline_data_csv = pandas.read_csv("AirlineData.csv")
@@ -56,6 +58,8 @@ features_test_scaled = scaler.transform(features_test)
 # train the model on the SCALED data using our scaler import
 classifier = LogisticRegression(max_iter=100)
 classifier.fit(features_train_scaled, labels_train)
+f1_score = f1_score(labels_test, classifier.predict(features_test_scaled))
 
 accuracy_score = classifier.score(features_test_scaled, labels_test)
 print(f"Logistic Regression Model Accuracy: {accuracy_score:.2f}")
+print(f"Logistic Regression Model f1_Score: {f1_score:.2f}")

@@ -11,6 +11,14 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_sc
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras import layers, models
+import tensorflow as tf
+import numpy as np
+import random
+
+#set the randomness
+tf.random.set_seed(42)
+np.random.seed(42)
+random.seed(42)
 
 # Reads the csv
 airline_data_csv = pd.read_csv("AirlineData.csv")
@@ -69,28 +77,32 @@ epoch_value_f1_score = []
 #the predicted labels that corresponds to the current BEST epoch value in each iteration.
 best_test_predicted_labels = []
 
+# creates neural network
+model = models.Sequential([
+    layers.Input(shape=(22,)),
+    layers.Dense(11, activation="relu"),
+    layers.Dense(5, activation="relu"),
+    layers.Dense(1, activation="sigmoid")
+])
+
+# configure model for training.
+model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
 #iterates through a range of epoch values to find the optimal epoch value
-for epoch_value in range(10,100,5):
-    # creates neural network
-    model = models.Sequential([
-        layers.Input(shape=(22,)),
-        layers.Dense(11, activation="relu"),
-        layers.Dense(5, activation="relu"),
-        layers.Dense(1, activation="sigmoid")
-    ])
 
-    # configure model for training.
-    model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+#a constant value to add the epoch value by on every iteration.
+constant_epoch_value_add = 5
 
+#iterate from 2 to 21, this will allow the epoch value to be 10(5*2), 15(5*3), ... 105(21*5)
+for iterate in range(2,22):
     #trains the model
-    model.fit(features_train,labels_train,validation_split =0.1,epochs = epoch_value ,batch_size = 32, verbose = 0) #fit/train model
+    model.fit(features_train,labels_train,validation_split =0.1,epochs = constant_epoch_value_add ,batch_size = 32, verbose = 0) #fit/train model
 
 
     #predicts labels based on the model.
     test_predicted_labels = (model.predict(features_test, verbose = 0) > 0.5).astype(int).flatten() #find the labels for all the predictions
 
     #add the current epoch value to the epoch_values so it can later be used later.
-    epoch_values.append(epoch_value)
+    epoch_values.append(constant_epoch_value_add*iterate)
 
     #add accuracy score
     epoch_value_accuracy_score.append(accuracy_score(labels_test,test_predicted_labels))
@@ -114,7 +126,7 @@ plt.plot(epoch_values, epoch_value_f1_score, label = "f1_score")
 plt.xlabel("epoch values") #add an x-axis label
 plt.ylabel("metric scores") #add a y-axis label
 plt.title("response of metric scores due to epoch values.") #add a title to the plot
-plt.legend() #make a legend so the score plotted line can be found corretcly
+plt.legend() #make a legend so the score plotted line can be found correctly
 plt.tight_layout() #make the labels to the plot fit correctly.
 plt.show() #display the line plot graph.
 
@@ -131,6 +143,7 @@ display = ConfusionMatrixDisplay(confusion_matrix = confusion_Matrix_Neural, dis
 display.plot()
 #create a title for the confusion matrix
 plt.title("Neural network confusion matrix")
+plt.tight_layout() #make the labels to the plot fit correctly.
 #display the confusion matrix
 plt.show()
 
